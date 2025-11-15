@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort # <-- Важливий тип! Відкриває порт "назовні"
+  selector:
+    app: nginx # Знаходить Pod'и Nginx
+  ports:
+    - protocol: TCP
+      port: 80 # Порт всередині кластера
+      targetPort: 80 # Порт на контейнері Nginx
+      # NodePort: (K8s сам вибере порт > 30000)

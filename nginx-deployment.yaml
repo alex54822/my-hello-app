@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine # Беремо готовий образ Nginx
+        ports:
+        - containerPort: 80 # Nginx слухає порт 80
+        volumeMounts: # <-- Ключова частина!
+        - name: nginx-conf-volume
+          mountPath: /etc/nginx/conf.d/default.conf # Куди покласти
+          subPath: nginx.conf # Який файл взяти з "коробки"
+      volumes: # Ось сама "коробка"
+      - name: nginx-conf-volume
+        configMap:
+          name: nginx-config # Використовуємо ConfigMap, який ми створили
