@@ -21,4 +21,4 @@ jobs:
         with:
           context: . # Где искать Dockerfile (текущая папка)
           push: true # Разрешить отправку в реестр
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:latest # (4) Тег с твоим логином!
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:v2 # (4) Тег с твоим логином!
