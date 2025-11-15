@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment # Назва нашого Deployment
+spec:
+  replicas: 1 # Ми просимо K8s запустити 1 копію (Pod)
+  selector:
+    matchLabels:
+      app: my-app # Цей селектор допоможе знайти Pods
+  template: # А це "креслення" для Pod'а
+    metadata:
+      labels:
+        app: my-app # Мітка, яку буде шукати селектор
+    spec:
+      containers:
+      - name: app-container
+        image: my-hello-app:latest # (1) Ось наш образ!
+        imagePullPolicy: IfNotPresent # ВАЖЛИВО: Не завантажувати, якщо вже є в minikube
+        ports:
+        - containerPort: 5000 # (2) Ось наш порт!

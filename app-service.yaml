@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service # Назва нашого Сервісу
+spec:
+  selector:
+    app: my-app # (1) КЛЮЧ: Він шукає Pod'и з цією міткою!
+  ports:
+    - protocol: TCP
+      port: 5000       # (2) Який порт буде у Сервісу
+      targetPort: 5000 # (3) На який порт Pod'а надсилати трафік
