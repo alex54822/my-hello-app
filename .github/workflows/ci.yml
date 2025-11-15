@@ -1,24 +1,37 @@
-name: Build and Push Docker Image
+name: Build and Deploy App # Имя пайплайна
+
 on:
   push:
-    branches: [ master, main ]
+    branches: [ main ] # Триггер при пуше в main
 
 jobs:
-  build:
+  build: # 1. CI-Задача: Сборка и Отправка
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:v2 # Передаем собранный тег дальше
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5 # (3) Это действие заменяет build и push
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
         with:
-          context: . # Где искать Dockerfile (текущая папка)
-          push: true # Разрешить отправку в реестр
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:v2 # (4) Тег с твоим логином!
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:v2 # Используем тег v2
+
+  deploy: # 2. CD-Задача: Развертывание
+    needs: build # <-- Зависимость: ждем, пока 'build' завершится
+    runs-on: ubuntu-latest
+    steps:
+      # В реальном мире здесь нужно получить Kubeconfig-файл с сервера
+      # Для нашей симуляции мы просто покажем команду, которая должна быть выполнена:
+      - name: Update K8s Deployment
+        run: |
+          # Это финальная команда CD, которую мы делали вручную:
+          kubectl set image deployment/app-deployment app-container=${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:v2
+          kubectl rollout status deployment/app-deployment
