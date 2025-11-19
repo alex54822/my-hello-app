@@ -53,11 +53,11 @@ jobs:
           kubeconfig: ${{ secrets.KUBE_CONFIG }} # <-- Нам нужно будет создать этот секрет
 
       # (5) НАША КОМАНДА: Теперь kubectl работает по-настоящему
-      - name: Deploy to K8s
-        run: |
-          echo "Deploying image ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:${{ needs.build.outputs.image_tag_sha }}"
+  #    - name: Deploy to K8s
+  #      run: |
+  #       echo "Deploying image ${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:${{ needs.build.outputs.image_tag_sha }}"
           
-          kubectl set image deployment/app-deployment app-container=${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:${{ needs.build.outputs.image_tag_sha }}
+   #       kubectl set image deployment/app-deployment app-container=${{ secrets.DOCKERHUB_USERNAME }}/my-hello-app:${{ needs.build.outputs.image_tag_sha }}
           
-          echo "Waiting for rollout to complete..."
-          kubectl rollout status deployment/app-deployment
+   #       echo "Waiting for rollout to complete..."
+   #       kubectl rollout status deployment/app-deployment
